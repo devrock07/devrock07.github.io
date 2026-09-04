@@ -46,7 +46,6 @@
   --muted: #aaa79e;
   --copper: oklch(82% 0.1 var(--accent-hue));
   --clay: oklch(76% 0.15 var(--accent-hue));
-  --signature-dot: #fff;
   --on-clay: #121514;
   --rule: rgb(238 231 216 / 16%);
   --rule-strong: rgb(238 231 216 / 38%);
@@ -118,7 +117,6 @@ a {
   --muted: #aaa79e;
   --copper: oklch(82% 0.1 var(--accent-hue));
   --clay: oklch(76% 0.15 var(--accent-hue));
-  --signature-dot: #fff;
   --on-clay: #121514;
   --rule: rgb(238 231 216 / 16%);
   --rule-strong: rgb(238 231 216 / 38%);
@@ -469,9 +467,9 @@ a {
 }
 
 .page-frame {
-  width: min(1120px, 100%);
+  width: 100%;
   margin: 0;
-  border-right: 1px solid var(--rule);
+  border-right: 0;
   border-left: 0;
 }
 
@@ -502,10 +500,6 @@ a {
   font-weight: 400;
   letter-spacing: -0.075em;
   line-height: 0.83;
-}
-
-.hero h1 span {
-  color: var(--signature-dot);
 }
 
 .hero-grid {
@@ -1038,9 +1032,9 @@ a {
   }
 
   .page-frame {
-    width: calc(100% - 18px);
-    margin: 0 auto;
-    border-left: 1px solid var(--rule);
+    width: 100%;
+    margin: 0;
+    border-left: 0;
   }
 
   .mobile-bar > a {
@@ -1106,10 +1100,6 @@ a {
 @media (max-width: 680px) {
   body {
     font-size: 17px;
-  }
-
-  .page-frame {
-    width: calc(100% - 18px);
   }
 
   .hero {

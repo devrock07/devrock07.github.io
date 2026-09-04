@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 import { socials } from '@/lib/site-content';
 
@@ -14,9 +13,7 @@ export default function AboutPage() {
     <div className="about-page">
       <section className="hero" aria-labelledby="hero-title">
         <p className="eyebrow">WEB DEVELOPER / BOT BUILDER</p>
-        <h1 id="hero-title">
-          Dev Bhakat<span>.</span>
-        </h1>
+        <h1 id="hero-title">Dev Bhakat</h1>
 
         <div className="hero-grid">
           <p className="hero-intro">
@@ -32,7 +29,7 @@ export default function AboutPage() {
         <div className="hero-links">
           <a href="mailto:devrock.alive@gmail.com">EMAIL ↗</a>
           <a href="https://github.com/devrock07">GITHUB ↗</a>
-          <Link href="/projects">PROJECTS →</Link>
+          <a href="/projects">PROJECTS →</a>
         </div>
       </section>
 
