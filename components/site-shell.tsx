@@ -28,6 +28,12 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
+import {
+  ACCENT_STORAGE_KEY,
+  DEFAULT_ACCENT_HUE,
+  parseStoredAccentHue,
+  THEME_STORAGE_KEY,
+} from '@/lib/site-preferences';
 
 const pages = [
   { href: '/', label: 'About' },
@@ -221,19 +227,56 @@ function ShellContent({
 }
 
 export function SiteShell({ children }: { children: ReactNode }) {
-  const [accentHue, setAccentHueState] = useState(92);
-  const [paperMode, setPaperMode] = useState(false);
+  const [accentHue, setAccentHueState] = useState(DEFAULT_ACCENT_HUE);
+  const [paperMode, setPaperModeState] = useState(false);
 
   useEffect(() => {
+    let savedPaperMode = false;
+    let savedAccentHue = DEFAULT_ACCENT_HUE;
+
+    try {
+      savedPaperMode = localStorage.getItem(THEME_STORAGE_KEY) === 'paper';
+      savedAccentHue = parseStoredAccentHue(
+        localStorage.getItem(ACCENT_STORAGE_KEY),
+      );
+    } catch {
+      // The site still works when browser storage is unavailable.
+    }
+
+    document.documentElement.dataset.theme = savedPaperMode ? 'paper' : 'night';
     document.documentElement.style.setProperty(
       '--accent-hue',
-      `${accentHue}deg`,
+      `${savedAccentHue}deg`,
     );
-  }, [accentHue]);
+    setPaperModeState(savedPaperMode);
+    setAccentHueState(savedAccentHue);
+  }, []);
+
+  const setPaperMode = (checked: boolean) => {
+    const theme = checked ? 'paper' : 'night';
+
+    setPaperModeState(checked);
+    document.documentElement.dataset.theme = theme;
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Keep the in-page control working even when storage is unavailable.
+    }
+  };
 
   const setAccentHue = (value: number | readonly number[]) => {
-    const nextHue = typeof value === 'number' ? value : (value[0] ?? 92);
+    const nextHue =
+      typeof value === 'number' ? value : (value[0] ?? DEFAULT_ACCENT_HUE);
+
     setAccentHueState(nextHue);
+    document.documentElement.style.setProperty('--accent-hue', `${nextHue}deg`);
+
+    try {
+      localStorage.setItem(ACCENT_STORAGE_KEY, String(nextHue));
+    } catch {
+      // Keep the in-page control working even when storage is unavailable.
+    }
   };
 
   return (

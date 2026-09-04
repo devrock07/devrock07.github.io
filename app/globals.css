@@ -80,13 +80,13 @@
 
 html {
   scroll-behavior: smooth;
-  background: #121514;
+  background: var(--tar);
 }
 
 body {
   margin: 0;
-  background: #121514;
-  color: #eee7d8;
+  background: var(--tar);
+  color: var(--paper);
   font-family: 'Redaction', Georgia, serif;
   font-size: 18px;
   font-weight: 400;
@@ -142,6 +142,8 @@ a {
 }
 
 .site-shell[data-theme='paper'],
+:root[data-theme='paper'],
+:root[data-theme='paper'] .site-shell,
 :root:has(.site-shell[data-theme='paper']) {
   --tar: #eee7d8;
   --paper: #1c211f;
