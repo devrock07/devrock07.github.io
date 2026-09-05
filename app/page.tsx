@@ -1,17 +1,15 @@
-import type { Metadata } from 'next';
 import { SiteLink as Link } from '@/components/site-link';
+import { StructuredData } from '@/components/structured-data';
 
 import { socials } from '@/lib/site-content';
+import { createPageMetadata, pageSeo, profileSchema } from '@/lib/site-seo';
 
-export const metadata: Metadata = {
-  title: 'About',
-  description:
-    'Dev Bhakat is a web developer and bot builder from Jamshedpur, India.',
-};
+export const metadata = createPageMetadata(pageSeo.about);
 
 export default function AboutPage() {
   return (
     <div className="about-page">
+      <StructuredData data={profileSchema} />
       <section className="hero" aria-labelledby="hero-title">
         <p className="eyebrow">WEB DEVELOPER / BOT BUILDER</p>
         <h1 id="hero-title">Dev Bhakat</h1>

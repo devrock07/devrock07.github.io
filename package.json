@@ -11,6 +11,7 @@
     "preview": "vite preview --outDir dist/client",
     "lint": "oxlint",
     "test:navigation": "node --test scripts/static-navigation.test.mjs",
+    "test:seo": "node --test scripts/seo.test.mjs",
     "format": "oxfmt"
   },
   "dependencies": {

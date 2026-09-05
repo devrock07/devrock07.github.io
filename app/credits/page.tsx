@@ -1,12 +1,9 @@
-import type { Metadata } from 'next';
+import { StructuredData } from '@/components/structured-data';
+import { createPageMetadata, creditsSchema, pageSeo } from '@/lib/site-seo';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
-  title: 'Credits',
-  description:
-    'Fonts, open-source tools, and artwork used on Dev Bhakat’s site.',
-};
+export const metadata = createPageMetadata(pageSeo.credits);
 
 const credits = [
   {
@@ -58,6 +55,7 @@ const credits = [
 export default function CreditsPage() {
   return (
     <div className="credits-page">
+      <StructuredData data={creditsSchema} />
       <header className="credits-intro">
         <p className="eyebrow">CREDITS / COLOPHON</p>
         <h1>The small print.</h1>

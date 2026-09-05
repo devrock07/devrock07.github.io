@@ -1,17 +1,15 @@
-import type { Metadata } from 'next';
-
+import { StructuredData } from '@/components/structured-data';
 import { projects } from '@/lib/site-content';
+import { createPageMetadata, pageSeo, projectsSchema } from '@/lib/site-seo';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'The projects pinned on Dev Bhakat’s GitHub profile.',
-};
+export const metadata = createPageMetadata(pageSeo.projects);
 
 export default function ProjectsPage() {
   return (
     <div className="projects-page">
+      <StructuredData data={projectsSchema} />
       <header className="projects-intro">
         <p className="eyebrow">01 / PINNED WORK</p>
         <h1>Things I kept.</h1>

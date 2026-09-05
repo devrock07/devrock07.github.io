@@ -1,7 +1,14 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 import { SiteShell } from '@/components/site-shell';
+import { StructuredData } from '@/components/structured-data';
+import {
+  createPageMetadata,
+  identitySchema,
+  pageSeo,
+  SITE_URL,
+} from '@/lib/site-seo';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
@@ -28,13 +35,21 @@ const preferenceScript = `
 `;
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://devv.is-a.dev'),
-  title: {
-    default: 'Dev Bhakat — Web Developer & Bot Builder',
-    template: '%s — Dev Bhakat',
+  ...createPageMetadata(pageSeo.about),
+  metadataBase: new URL(SITE_URL),
+  authors: [{ name: 'Dev Bhakat', url: SITE_URL }],
+  creator: 'Dev Bhakat',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
-  description:
-    'Dev Bhakat builds fast web tools, Discord bots, automation, and interfaces from Jamshedpur, India.',
   icons: {
     icon: [
       {
@@ -48,6 +63,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#d5bd4b',
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -55,6 +76,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: preferenceScript }} />
       </head>
       <body>
+        <StructuredData data={identitySchema} />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>
