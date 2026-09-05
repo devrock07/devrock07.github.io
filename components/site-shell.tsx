@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ExternalLinkSharp } from 'pixelarticons/react/ExternalLinkSharp';
 import { GithubSolid } from 'pixelarticons/react/GithubSolid';
@@ -29,7 +28,7 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
-import '@/lib/install-static-navigation';
+import { SiteLink as Link } from '@/components/site-link';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
