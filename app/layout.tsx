@@ -16,6 +16,8 @@ import {
 } from '@/lib/site-preferences';
 
 import './globals.css';
+import './personal-details.css';
+import './pixel-scratchpad.css';
 
 const preferenceScript = `
   (function () {

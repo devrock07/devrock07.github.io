@@ -30,6 +30,7 @@ import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
 import { SiteLink as Link } from '@/components/site-link';
 import { createPixelCursors } from '@/lib/pixel-cursors.mjs';
+import { SiteFinder } from '@/components/site-finder';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
@@ -121,6 +122,7 @@ function ShellContent({
           >
             CLOSE
           </button>
+          <SiteFinder onNavigate={closeMobile} />
         </SidebarHeader>
 
         <SidebarContent className="sidebar-scroll">

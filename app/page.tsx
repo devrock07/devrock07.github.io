@@ -1,7 +1,8 @@
 import { SiteLink as Link } from '@/components/site-link';
 import { StructuredData } from '@/components/structured-data';
-
-import { socials } from '@/lib/site-content';
+import { ContactLinks } from '@/components/contact-links';
+import { LocalClock } from '@/components/local-clock';
+import { PixelScratchpad } from '@/components/pixel-scratchpad';
 import { createPageMetadata, pageSeo, profileSchema } from '@/lib/site-seo';
 
 export const metadata = createPageMetadata(pageSeo.about);
@@ -22,6 +23,7 @@ export default function AboutPage() {
           <aside className="hero-note">
             <span aria-hidden="true">↳</span>
             <p>I break code, then make it better.</p>
+            <LocalClock />
           </aside>
         </div>
 
@@ -97,23 +99,32 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section
+        className="section detour"
+        id="pixel-pad"
+        aria-labelledby="detour-title"
+      >
+        <div className="detour-copy">
+          <p className="eyebrow">03 / A LITTLE DETOUR</p>
+          <h2 id="detour-title">Got a minute?</h2>
+          <p>
+            A few pixels to mess around with while you’re here. Draw something.
+            Erase it. Start again.
+          </p>
+          <p className="detour-footnote">
+            The ink follows your accent color.
+            <br />
+            Nothing is posted or sent anywhere.
+          </p>
+        </div>
+        <PixelScratchpad />
+      </section>
+
       <section className="contact" id="contact" aria-labelledby="contact-title">
-        <p className="contact-index">03 / CONTACT</p>
+        <p className="contact-index">04 / CONTACT</p>
         <h2 id="contact-title">Found a bug?</h2>
         <p>I probably know. Send it anyway—or just say hello.</p>
-        <a className="big-mail" href="mailto:devrock.alive@gmail.com">
-          devrock.alive@gmail.com <span>↗</span>
-        </a>
-
-        <div className="social-row" aria-label="Social links">
-          {socials
-            .filter((social) => social.label !== 'Email')
-            .map((social) => (
-              <a href={social.href} key={social.label}>
-                {social.label}
-              </a>
-            ))}
-        </div>
+        <ContactLinks />
       </section>
     </div>
   );

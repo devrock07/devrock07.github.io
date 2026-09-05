@@ -45,6 +45,9 @@ jobs:
       - name: Check accent-synced cursors
         run: npm run test:cursors
 
+      - name: Check interactive details
+        run: npm run test:details
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
