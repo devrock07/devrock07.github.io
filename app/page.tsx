@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import { socials } from '@/lib/site-content';
 
@@ -29,7 +30,9 @@ export default function AboutPage() {
         <div className="hero-links">
           <a href="mailto:devrock.alive@gmail.com">EMAIL ↗</a>
           <a href="https://github.com/devrock07">GITHUB ↗</a>
-          <a href="/projects">PROJECTS →</a>
+          <Link href="/projects" prefetch={true}>
+            PROJECTS →
+          </Link>
         </div>
       </section>
 

@@ -80,7 +80,25 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
   background: var(--tar);
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0.85;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-page,
+.projects-page,
+.credits-page {
+  animation: page-enter 160ms ease-out;
 }
 
 body {
@@ -1250,5 +1268,6 @@ a {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+    animation: none !important;
   }
 }

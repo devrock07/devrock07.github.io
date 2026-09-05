@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check page navigation
+        run: npm run test:navigation
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

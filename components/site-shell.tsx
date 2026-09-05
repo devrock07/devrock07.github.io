@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ExternalLinkSharp } from 'pixelarticons/react/ExternalLinkSharp';
 import { GithubSolid } from 'pixelarticons/react/GithubSolid';
@@ -28,6 +29,7 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
+import '@/lib/install-static-navigation';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
@@ -86,7 +88,12 @@ function ShellContent({
 
       <Sidebar className="editorial-sidebar" collapsible="offcanvas">
         <SidebarHeader className="sidebar-head">
-          <a className="sidebar-wordmark" href="/" onClick={closeMobile}>
+          <Link
+            className="sidebar-wordmark"
+            href="/"
+            onNavigate={closeMobile}
+            prefetch={true}
+          >
             <span className="sidebar-logo" aria-hidden="true">
               <Image
                 src="/dev-bhakat-mark.png"
@@ -97,7 +104,7 @@ function ShellContent({
               />
             </span>
             <strong>DEV BHAKAT</strong>
-          </a>
+          </Link>
           <button
             className="sidebar-close"
             onClick={() => setOpenMobile(false)}
@@ -113,20 +120,21 @@ function ShellContent({
               <p className="sidebar-label">MAIN</p>
               <div className="sidebar-primary">
                 {pages.map((page) => (
-                  <a
+                  <Link
                     aria-current={
                       isCurrent(pathname, page.href) ? 'page' : undefined
                     }
                     href={page.href}
                     key={page.href}
-                    onClick={closeMobile}
+                    onNavigate={closeMobile}
+                    prefetch={true}
                   >
                     {page.label}
-                  </a>
+                  </Link>
                 ))}
-                <a href="/#contact" onClick={closeMobile}>
+                <Link href="/#contact" onNavigate={closeMobile} prefetch={true}>
                   Contact
-                </a>
+                </Link>
               </div>
             </section>
 
@@ -200,7 +208,7 @@ function ShellContent({
 
       <SidebarInset className="site-stage" id="main-content">
         <header className="mobile-bar">
-          <a href="/" aria-label="Dev Bhakat, about">
+          <Link href="/" aria-label="Dev Bhakat, about" prefetch={true}>
             <Image
               src="/dev-bhakat-mark.png"
               alt=""
@@ -208,7 +216,7 @@ function ShellContent({
               height={52}
               priority
             />
-          </a>
+          </Link>
           <span>{current.label}</span>
           <SidebarTrigger className="sidebar-trigger" />
         </header>
