@@ -1,11 +1,28 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { before, test } from 'node:test';
 
 const outputDirectory = join(import.meta.dirname, '..', 'dist', 'client');
 const origin = 'https://devv.is-a.dev';
-const imagePath = '/social/dev-bhakat-preview-v1.png';
+const socialImages = {
+  '/': {
+    path: '/social/dev-bhakat-preview-v1.png',
+    width: 1731,
+    height: 909,
+  },
+  '/projects': {
+    path: '/social/projects-preview-v1.png',
+    width: 1731,
+    height: 909,
+  },
+  '/credits': {
+    path: '/social/credits-preview-v1.png',
+    width: 1732,
+    height: 908,
+  },
+};
 const routes = [
   ['/', 'index', 'Dev Bhakat — Web Developer & Bot Builder'],
   ['/projects', 'projects', 'Projects — Dev Bhakat'],
@@ -132,6 +149,7 @@ before(async () => {
         path,
         file,
         title,
+        image: socialImages[path],
         html,
         head,
         documents,
@@ -173,7 +191,7 @@ for (const [path] of routes) {
     assert.equal(meta(page, 'og:site_name'), 'Dev Bhakat');
     assert.equal(meta(page, 'og:type'), 'website');
     assert.match(meta(page, 'og:locale'), /^[a-z]{2}_[A-Z]{2}$/);
-    assert.equal(meta(page, 'og:image'), `${origin}${imagePath}`);
+    assert.equal(meta(page, 'og:image'), `${origin}${page.image.path}`);
     assert.equal(meta(page, 'og:image:type'), 'image/png');
     assert.ok(meta(page, 'og:image:alt')?.trim(), `${path} image alt is empty`);
     assert.equal(meta(page, 'twitter:card'), 'summary_large_image');
@@ -287,25 +305,34 @@ test('projects structured data matches the six visible repositories in order', (
   );
 });
 
-test('the shared social image is a small PNG with the advertised dimensions', async () => {
-  const image = await readFile(join(outputDirectory, imagePath.slice(1)));
-  assert.ok(
-    image.length > 24 && image.length < 5 * 1024 * 1024,
-    'Social image must be below 5 MiB',
-  );
-  assert.deepEqual(
-    image.subarray(0, 8),
-    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
-  );
-  assert.equal(image.toString('ascii', 12, 16), 'IHDR');
-  const width = image.readUInt32BE(16);
-  const height = image.readUInt32BE(20);
-  assert.equal(width, 1731);
-  assert.equal(height, 909);
+test('each page has a distinct, small PNG with its advertised dimensions', async () => {
+  const imageHashes = new Set();
   for (const page of pages.values()) {
+    const image = await readFile(
+      join(outputDirectory, page.image.path.slice(1)),
+    );
+    assert.ok(
+      image.length > 24 && image.length < 5 * 1024 * 1024,
+      `${page.path} social image must be below 5 MiB`,
+    );
+    assert.deepEqual(
+      image.subarray(0, 8),
+      Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    );
+    assert.equal(image.toString('ascii', 12, 16), 'IHDR');
+    const width = image.readUInt32BE(16);
+    const height = image.readUInt32BE(20);
+    assert.equal(width, page.image.width, `${page.path} PNG width`);
+    assert.equal(height, page.image.height, `${page.path} PNG height`);
     assert.equal(meta(page, 'og:image:width'), String(width));
     assert.equal(meta(page, 'og:image:height'), String(height));
+    imageHashes.add(createHash('sha256').update(image).digest('hex'));
   }
+  assert.equal(
+    imageHashes.size,
+    routes.length,
+    'Every page must use different image bytes',
+  );
 });
 
 test('robots.txt allows portfolio crawlers and points to the canonical sitemap', async () => {
@@ -339,7 +366,10 @@ test('robots.txt allows portfolio crawlers and points to the canonical sitemap',
     const applicable = specific.length
       ? specific
       : groups.filter((entry) => entry.agents.includes('*'));
-    for (const path of [...routes.map(([route]) => route), imagePath]) {
+    for (const path of [
+      ...routes.map(([route]) => route),
+      ...Object.values(socialImages).map((image) => image.path),
+    ]) {
       const matching = applicable
         .flatMap((entry) => entry.rules)
         .filter((rule) => {
@@ -393,4 +423,46 @@ test('GitHub Pages directory copies retain the same complete HTML', async () => 
       `${path}/index.html differs from ${file}.html`,
     );
   }
+});
+
+test('every footer links to an honest AI-use disclosure on the credits page', () => {
+  for (const page of pages.values()) {
+    const footer = single(
+      Array.from(
+        withoutScripts(page.html).matchAll(
+          /<footer\b([^>]*)>([\s\S]*?)<\/footer\s*>/gi,
+        ),
+      ).filter((match) =>
+        attributes(match[1]).class?.split(/\s+/).includes('site-footer'),
+      ),
+      `${page.path} shared footer`,
+    )[2];
+    const disclosureLink = single(
+      Array.from(
+        footer.matchAll(
+          /<a\b((?:[^"'<>]|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/a\s*>/gi,
+        ),
+      ).filter((match) => attributes(match[1]).href === '/credits#ai-use'),
+      `${page.path} AI disclosure link`,
+    );
+    const label = visibleText(disclosureLink[2]);
+    assert.match(label, /\bAI\s*-\s*ACCELERATED\b/);
+    assert.match(label, /\bHUMAN\s*-\s*DIRECTED\b/);
+    assert.doesNotMatch(label, /\b(certified|verified|approved|accredited)\b/i);
+  }
+  const disclosure = single(
+    Array.from(
+      withoutScripts(pages.get('/credits').html).matchAll(
+        /<article\b([^>]*)>([\s\S]*?)<\/article\s*>/gi,
+      ),
+    ).filter((match) => attributes(match[1]).id === 'ai-use'),
+    'credits AI-use section',
+  );
+  const text = visibleText(disclosure[2]);
+  assert.match(text, /\bI set the direction and make the design calls\b/i);
+  assert.match(
+    text,
+    /\bAI tools were used for coding, debugging, and the link-preview artwork\b/i,
+  );
+  assert.match(text, /\bmy own disclosure, not a third-party certification\b/i);
 });

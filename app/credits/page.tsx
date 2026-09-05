@@ -50,6 +50,16 @@ const credits = [
     description: 'This is my avatar icon made by me.',
     links: [],
   },
+  {
+    index: '05',
+    kind: 'HOW IT’S MADE',
+    name: 'Human-directed. AI-accelerated.',
+    description:
+      'I set the direction and make the design calls. AI tools were used for coding, debugging, and the link-preview artwork. The sticker is my own disclosure, not a third-party certification.',
+    links: [
+      { label: 'AI HONESTY BADGE ↗', href: 'https://www.aihonestybadge.com/' },
+    ],
+  },
 ] as const;
 
 export default function CreditsPage() {
@@ -66,7 +76,11 @@ export default function CreditsPage() {
 
       <section className="credits-list" aria-label="Site credits">
         {credits.map((credit) => (
-          <article className="credit-row" key={credit.index}>
+          <article
+            className="credit-row"
+            id={credit.index === '05' ? 'ai-use' : undefined}
+            key={credit.index}
+          >
             <span className="credit-number" aria-hidden="true">
               {credit.index}
             </span>
