@@ -82,8 +82,11 @@ test('all exported pages pass the real router checks without a hard navigation',
   for (const href of [
     '/',
     '/projects',
+    '/stamps',
     '/credits',
     '/projects/',
+    '/stamps/',
+    '/stamps/?via=nav#apps',
     '/credits/?via=nav',
     '/#contact',
   ]) {

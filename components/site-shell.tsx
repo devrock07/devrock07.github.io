@@ -41,6 +41,7 @@ import {
 const pages = [
   { href: '/', label: 'About' },
   { href: '/projects', label: 'Projects' },
+  { href: '/stamps', label: 'Stamps' },
   { href: '/credits', label: 'Credits' },
 ] as const;
 

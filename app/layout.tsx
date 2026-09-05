@@ -18,6 +18,7 @@ import {
 import './globals.css';
 import './personal-details.css';
 import './pixel-scratchpad.css';
+import './stamps.css';
 
 const preferenceScript = `
   (function () {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { projects, socials } from '@/lib/site-content';
+import { stamps } from '@/lib/site-stamps';
 
 export const SITE_URL = 'https://devv.is-a.dev';
 
@@ -27,6 +28,18 @@ export const pageSeo = {
       width: 1731,
       height: 909,
       alt: 'Projects by Dev Bhakat: AniMc, Pogy-Bot, Shafed-Billi, arrkiii, REM-AIO, and astryx — web tools and Discord bots.',
+    },
+  },
+  stamps: {
+    path: '/stamps',
+    title: 'Stamps — Dev Bhakat',
+    description:
+      'Dev Bhakat’s little stamp collection: Discord, GitHub, coding tools, Minecraft, pixel art, and the apps and interests behind his projects.',
+    image: {
+      path: '/social/stamps-preview-v1.png',
+      width: 1200,
+      height: 630,
+      alt: 'Stamps by Dev Bhakat — a retro pixel stamp sheet for apps, coding tools, Minecraft, and pixel art.',
     },
   },
   credits: {
@@ -155,4 +168,26 @@ export const creditsSchema = {
   name: pageSeo.credits.title,
   description: pageSeo.credits.description,
   isPartOf: { '@id': websiteId },
+};
+
+export const stampsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${SITE_URL}/stamps#stamps-page`,
+  url: `${SITE_URL}/stamps`,
+  name: pageSeo.stamps.title,
+  description: pageSeo.stamps.description,
+  isPartOf: { '@id': websiteId },
+  about: { '@id': personId },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: stamps.length,
+    itemListElement: stamps.map((stamp, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: stamp.name,
+      url: new URL(stamp.href, SITE_URL).href,
+      description: stamp.note,
+    })),
+  },
 };

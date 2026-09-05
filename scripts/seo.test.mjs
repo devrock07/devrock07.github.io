@@ -22,11 +22,17 @@ const socialImages = {
     width: 1732,
     height: 908,
   },
+  '/stamps': {
+    path: '/social/stamps-preview-v1.png',
+    width: 1200,
+    height: 630,
+  },
 };
 const routes = [
   ['/', 'index', 'Dev Bhakat — Web Developer & Bot Builder'],
   ['/projects', 'projects', 'Projects — Dev Bhakat'],
   ['/credits', 'credits', 'Credits — Dev Bhakat'],
+  ['/stamps', 'stamps', 'Stamps — Dev Bhakat'],
 ];
 const pages = new Map();
 const namedEntities = {
@@ -392,7 +398,7 @@ test('robots.txt allows portfolio crawlers and points to the canonical sitemap',
   }
 });
 
-test('the sitemap contains exactly the three canonical page URLs', async () => {
+test('the sitemap contains exactly the canonical page URLs', async () => {
   const sitemap = await readFile(join(outputDirectory, 'sitemap.xml'), 'utf8');
   assert.match(
     sitemap,
@@ -407,6 +413,35 @@ test('the sitemap contains exactly the three canonical page URLs', async () => {
     routes
       .map(([path]) => `${origin}${path}`)
       .sort((left, right) => left.localeCompare(right)),
+  );
+});
+
+test('stamps are rendered as accessible links and match their structured data', () => {
+  const page = pages.get('/stamps');
+  const collection = typedNode(page, 'CollectionPage');
+  const links = tags(page.html, 'a').filter((tag) =>
+    tag.class?.split(/\s+/).includes('web-stamp'),
+  );
+  const entries = collection.mainEntity.itemListElement;
+  assert.equal(collection.url, `${origin}/stamps`);
+  assert.equal(links.length, 12);
+  assert.equal(collection.mainEntity.numberOfItems, links.length);
+  assert.deepEqual(
+    entries.map((entry) => entry.url),
+    links.map((link) => new URL(link.href, origin).href),
+  );
+  for (const [index, entry] of entries.entries()) {
+    assert.equal(entry.position, index + 1);
+    assert.ok(entry.name && entry.description);
+    assert.ok(links[index]['aria-describedby']);
+  }
+  const filters = tags(page.html, 'button').filter(
+    (tag) => 'aria-pressed' in tag,
+  );
+  assert.equal(filters.length, 4);
+  assert.equal(
+    filters.filter((tag) => tag['aria-pressed'] === 'true').length,
+    1,
   );
 });
 

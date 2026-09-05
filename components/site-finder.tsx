@@ -33,6 +33,13 @@ const entries = [
     keywords: 'work builds repositories github',
   },
   {
+    title: 'Stamps',
+    description: 'A little collection of interests, apps, and web buttons.',
+    href: '/stamps',
+    group: 'Pages',
+    keywords: 'interests apps software tools stamps buttons collection',
+  },
+  {
     title: 'Credits',
     description: 'Typefaces, icons, and what went into this site.',
     href: '/credits',
