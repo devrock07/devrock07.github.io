@@ -55,6 +55,101 @@
   padding: 0 var(--content-x) 64px;
 }
 
+.stamp-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.stamp-search {
+  display: flex;
+  flex: 1 1 240px;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--copper);
+}
+
+.stamp-search svg,
+.stamp-share svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.stamp-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  font:
+    11px/1.6 'Departure Mono',
+    monospace;
+}
+
+.stamp-search input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.stamp-search:focus-within {
+  border-color: var(--copper);
+  outline: 1px solid var(--copper);
+}
+
+.stamp-search input:focus-visible {
+  outline: none;
+}
+
+.stamp-share,
+.stamp-empty button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 14px;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--copper);
+  font:
+    11px/1.5 'Departure Mono',
+    monospace;
+}
+
+.stamp-share-status {
+  display: block;
+  min-height: 36px;
+  padding: 8px 0 12px;
+  color: var(--muted);
+  font:
+    10px/1.6 'Departure Mono',
+    monospace;
+}
+
+.stamp-empty {
+  padding: 32px 0 0;
+}
+
+.stamp-empty p {
+  margin: 0 0 10px;
+  font-size: 1.6rem;
+}
+
+.stamp-empty span {
+  display: block;
+  margin-bottom: 20px;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
 .stamp-toolbar {
   display: flex;
   align-items: center;

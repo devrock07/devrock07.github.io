@@ -1,12 +1,6 @@
 import { animeStamps } from '@/lib/anime-stamps';
 
-export const stampCategories = [
-  'All stamps',
-  'Anime & manga',
-  'Apps',
-  'Toolkit',
-  'Interests',
-] as const;
+export { stampCategories } from '@/lib/stamp-filter.mjs';
 
 export const stamps = [
   {

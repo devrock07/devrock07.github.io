@@ -3,6 +3,7 @@
 /* oxlint-disable jsx-a11y/no-noninteractive-element-to-interactive-role -- This native table is an ARIA drawing grid with arrow-key navigation and one tab stop. */
 
 import {
+  useEffect,
   useId,
   useReducer,
   useRef,
@@ -17,19 +18,38 @@ import {
   PIXEL_PAD_COLUMNS,
   PIXEL_PAD_ROWS,
 } from '@/lib/pixel-pad.mjs';
+import {
+  parsePixelDrawing,
+  PIXEL_PAD_STORAGE_KEY,
+  serializePixelDrawing,
+} from '@/lib/pixel-pad-storage.mjs';
 
 type Point = { x: number; y: number };
+type PadState = ReturnType<typeof createPixelPadState>;
+type PadAction = Parameters<typeof pixelPadReducer>[1];
+
+function persistentPadReducer(
+  state: PadState,
+  action: PadAction | { type: 'restore'; pixels: boolean[] },
+): PadState {
+  if (action.type === 'restore') {
+    return { pixels: action.pixels, history: [], strokeStart: null };
+  }
+  return pixelPadReducer(state, action);
+}
 
 export function PixelScratchpad() {
   const id = useId();
   const [state, dispatch] = useReducer(
-    pixelPadReducer,
+    persistentPadReducer,
     undefined,
     createPixelPadState,
   );
   const [tool, setTool] = useState<'draw' | 'erase'>('draw');
   const [active, setActive] = useState<Point>({ x: 0, y: 0 });
   const [saveMessage, setSaveMessage] = useState('');
+  const [storageReady, setStorageReady] = useState(false);
+  const [storageMessage, setStorageMessage] = useState('');
   const grid = useRef<HTMLTableElement>(null);
   const stroke = useRef<{
     pointerId: number;
@@ -37,6 +57,49 @@ export function PixelScratchpad() {
     filled: boolean;
   } | null>(null);
   const count = state.pixels.filter(Boolean).length;
+
+  useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        const saved = parsePixelDrawing(
+          window.localStorage.getItem(PIXEL_PAD_STORAGE_KEY),
+        );
+        if (saved) dispatch({ type: 'restore', pixels: saved });
+        // State, rather than a ref, keeps saving gated until the restored
+        // drawing and readiness flag have been committed in the same render.
+        setStorageReady(true);
+      } catch {
+        setStorageMessage('Auto-save unavailable. Save a PNG to keep it.');
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    const drawing = serializePixelDrawing(state.pixels);
+    if (!drawing) return;
+    let message: string;
+    try {
+      window.localStorage.setItem(PIXEL_PAD_STORAGE_KEY, drawing);
+      message = 'Saved on this device.';
+    } catch {
+      message = 'Auto-save unavailable. Save a PNG to keep it.';
+    }
+    // The write is immediate; defer only its UI receipt to avoid another
+    // synchronous render inside an effect on every pointer sample.
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setStorageMessage(message);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [state.pixels, storageReady]);
 
   const getPoint = (event: PointerEvent<HTMLTableElement>): Point => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -285,7 +348,9 @@ export function PixelScratchpad() {
       <p className="pixel-pad__keys" id={`${id}-keys`}>
         Drag to draw. <kbd>Arrows</kbd> move · <kbd>Space</kbd> toggles.
       </p>
-      <output className="pixel-pad__status">{saveMessage}</output>
+      <output className="pixel-pad__status">
+        {saveMessage || storageMessage}
+      </output>
     </section>
   );
 }

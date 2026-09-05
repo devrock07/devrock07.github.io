@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { DiscordSolid } from 'pixelarticons/react/DiscordSolid';
 import { GithubSolid } from 'pixelarticons/react/GithubSolid';
 import { InstagramSolid } from 'pixelarticons/react/InstagramSolid';
@@ -17,8 +18,30 @@ import { Sparkles } from 'pixelarticons/react/Sparkles';
 import { Coins } from 'pixelarticons/react/Coins';
 import { Heart } from 'pixelarticons/react/Heart';
 import { Moon } from 'pixelarticons/react/Moon';
+import { Search } from 'pixelarticons/react/Search';
+import { CopySharp } from 'pixelarticons/react/CopySharp';
+import { Check } from 'pixelarticons/react/Check';
 import { SiteLink } from '@/components/site-link';
 import { stampCategories, stamps, type Stamp } from '@/lib/site-stamps';
+import {
+  filterStamps,
+  readStampFilters,
+  stampViewHref,
+} from '@/lib/stamp-filter.mjs';
+
+const filterChangeEvent = 'devrock:stamp-filter-change';
+
+function subscribeToFilterLocation(onChange: () => void) {
+  window.addEventListener('popstate', onChange);
+  window.addEventListener(filterChangeEvent, onChange);
+  return () => {
+    window.removeEventListener('popstate', onChange);
+    window.removeEventListener(filterChangeEvent, onChange);
+  };
+}
+
+const readFilterLocation = () => window.location.search;
+const serverFilterLocation = () => '';
 
 function StampMark({ id }: { id: Stamp['id'] }) {
   switch (id) {
@@ -72,14 +95,89 @@ function StampMark({ id }: { id: Stamp['id'] }) {
 }
 
 export function StampCollection() {
-  const [category, setCategory] =
-    useState<(typeof stampCategories)[number]>('All stamps');
-  const visible = stamps.filter(
-    (stamp) => category === 'All stamps' || stamp.category === category,
+  // Subscribe to framework-led navigation, including same-page finder links.
+  useSearchParams();
+  // Static exports hydrate from an empty query snapshot. Read the real address
+  // after hydration so a directly opened shared view keeps its filter/search.
+  const search = useSyncExternalStore(
+    subscribeToFilterLocation,
+    readFilterLocation,
+    serverFilterLocation,
   );
+  const { category, query } = readStampFilters(search);
+  const visible: readonly Stamp[] = filterStamps(stamps, category, query);
+  const viewHref = stampViewHref(category, query);
+  const [copyFeedback, setCopyFeedback] = useState<{
+    href: string;
+    status: 'copied' | 'error';
+  } | null>(null);
+  const copyState = copyFeedback?.href === viewHref ? copyFeedback.status : 'idle';
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+
+  function updateView(nextCategory: string, nextQuery: string, push = false) {
+    const href = stampViewHref(nextCategory, nextQuery);
+    if (href === window.location.pathname + window.location.search) return;
+    // Vinext observes native History updates without requesting another page.
+    // Preserve the router's history metadata, including back/forward restoration.
+    window.history[push ? 'pushState' : 'replaceState'](
+      window.history.state,
+      '',
+      href,
+    );
+    window.dispatchEvent(new Event(filterChangeEvent));
+    setCopyFeedback(null);
+  }
+
+  async function copyView() {
+    if (timer.current) clearTimeout(timer.current);
+    try {
+      await navigator.clipboard.writeText(
+        new URL(viewHref, window.location.origin).href,
+      );
+      setCopyFeedback({ href: viewHref, status: 'copied' });
+    } catch {
+      setCopyFeedback({ href: viewHref, status: 'error' });
+    }
+    timer.current = setTimeout(() => setCopyFeedback(null), 3500);
+  }
 
   return (
     <section className="stamp-collection" aria-label="Stamp collection">
+      <div className="stamp-search-row">
+        <label className="stamp-search">
+          <Search aria-hidden="true" />
+          <span className="sr-only">Search stamps</span>
+          <input
+            type="search"
+            value={query}
+            maxLength={100}
+            placeholder="Find a title, app, or little obsession…"
+            onChange={(event) => updateView(category, event.target.value)}
+          />
+        </label>
+        <button type="button" className="stamp-share" onClick={copyView}>
+          {copyState === 'copied' ? (
+            <Check aria-hidden="true" />
+          ) : (
+            <CopySharp aria-hidden="true" />
+          )}
+          <span>{copyState === 'copied' ? 'Copied' : 'Copy view link'}</span>
+        </button>
+      </div>
+      <output className="stamp-share-status" aria-live="polite">
+        {copyState === 'copied'
+          ? 'Link copied, including your current filter.'
+          : copyState === 'error'
+            ? 'Couldn’t copy. You can copy this page’s address instead.'
+            : 'Search stays on this site. Share a filter with its own link.'}
+      </output>
       <div className="stamp-toolbar">
         <fieldset className="stamp-filters" aria-label="Filter stamps">
           {stampCategories.map((filter) => (
@@ -87,7 +185,7 @@ export function StampCollection() {
               type="button"
               key={filter}
               aria-pressed={category === filter}
-              onClick={() => setCategory(filter)}
+              onClick={() => updateView(filter, query, true)}
             >
               {filter}
             </button>
@@ -102,6 +200,16 @@ export function StampCollection() {
           </span>
         </output>
       </div>
+
+      {visible.length === 0 ? (
+        <div className="stamp-empty">
+          <p>No stamps match that.</p>
+          <span>Try another title, or take a look at the whole sheet.</span>
+          <button type="button" onClick={() => updateView('All stamps', '')}>
+            Show all stamps
+          </button>
+        </div>
+      ) : null}
 
       <ul className="stamp-sheet">
         {visible.map((stamp) => {

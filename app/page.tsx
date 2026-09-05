@@ -4,6 +4,7 @@ import { ContactLinks } from '@/components/contact-links';
 import { LocalClock } from '@/components/local-clock';
 import { PixelScratchpad } from '@/components/pixel-scratchpad';
 import { createPageMetadata, pageSeo, profileSchema } from '@/lib/site-seo';
+import './home-discovery.css';
 
 export const metadata = createPageMetadata(pageSeo.about);
 
@@ -55,6 +56,7 @@ export default function AboutPage() {
               based in Jamshedpur, Jharkhand, and speak English, Hindi, and
               Bengali.
             </p>
+            <p>Away from code, I’m into anime and manga.</p>
           </div>
 
           <dl className="facts">
@@ -72,6 +74,53 @@ export default function AboutPage() {
             </div>
           </dl>
         </div>
+
+        <nav className="home-discovery" aria-labelledby="discovery-title">
+          <h3 id="discovery-title">Elsewhere on this site</h3>
+          <ul className="home-discovery-list">
+            <li>
+              <Link
+                href="/stamps?category=anime"
+                className="home-discovery-link"
+              >
+                <span className="home-discovery-title">
+                  Anime &amp; manga <span aria-hidden="true">→</span>
+                </span>
+                <span className="home-discovery-description">
+                  Your Name, Suzume, Dandadan, and a few more.
+                </span>
+                <span className="home-discovery-destination">
+                  THE STAMP WALL
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/stamps?category=toolkit"
+                className="home-discovery-link"
+              >
+                <span className="home-discovery-title">
+                  Tools I use <span aria-hidden="true">→</span>
+                </span>
+                <span className="home-discovery-description">
+                  JavaScript, Python, Svelte, and the rest of my toolkit.
+                </span>
+                <span className="home-discovery-destination">THE TOOLKIT</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/#pixel-pad" className="home-discovery-link">
+                <span className="home-discovery-title">
+                  Leave a few pixels <span aria-hidden="true">↓</span>
+                </span>
+                <span className="home-discovery-description">
+                  A small drawing pad. Make something and take it with you.
+                </span>
+                <span className="home-discovery-destination">FURTHER DOWN</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </section>
 
       <section className="section notes" aria-labelledby="notes-title">

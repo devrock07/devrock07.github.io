@@ -15,6 +15,7 @@ import {
 import { SiteLink } from '@/components/site-link';
 import { projects } from '@/lib/site-content';
 import { animeStamps } from '@/lib/anime-stamps';
+import { stampViewHref } from '@/lib/stamp-filter.mjs';
 import { searchSite } from '@/lib/site-search.mjs';
 import '@/app/site-finder.css';
 
@@ -47,6 +48,13 @@ const entries = [
     group: 'Pages',
     keywords: 'fonts departure mono redaction pixelarticons colophon',
   },
+  ...animeStamps.map((stamp) => ({
+    title: stamp.name,
+    description: stamp.note,
+    href: stampViewHref('Anime & manga', stamp.name),
+    group: 'Anime & manga',
+    keywords: 'anime manga stamps interests',
+  })),
   {
     title: 'About me',
     description: 'What I make and how I work.',
@@ -84,8 +92,6 @@ const entries = [
   })),
 ];
 
-const groups = ['Pages', 'On this site', 'Projects'];
-
 function isTyping(target: EventTarget | null) {
   return (
     target instanceof HTMLElement &&
@@ -106,6 +112,7 @@ export function SiteFinder({ onNavigate }: { onNavigate?: () => void }) {
   const inputId = useId();
   const resultsId = useId();
   const results = searchSite(entries, query);
+  const groups = [...new Set(results.map((result) => result.group))];
 
   const changeOpen = useCallback((nextOpen: boolean) => {
     setOpen(nextOpen);

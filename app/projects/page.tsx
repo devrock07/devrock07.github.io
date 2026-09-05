@@ -1,5 +1,5 @@
 import { StructuredData } from '@/components/structured-data';
-import { projects } from '@/lib/site-content';
+import { ProjectCollection } from '@/components/project-collection';
 import { createPageMetadata, pageSeo, projectsSchema } from '@/lib/site-seo';
 
 export const dynamic = 'force-static';
@@ -22,37 +22,7 @@ export default function ProjectsPage() {
         </div>
       </header>
 
-      <section className="project-list" aria-label="Pinned projects">
-        {projects.map((project) => (
-          <article className="project" id={project.slug} key={project.name}>
-            <span className="project-number" aria-hidden="true">
-              {project.index}
-            </span>
-
-            <div className="project-main">
-              <div className="project-title-row">
-                <h2>{project.name}</h2>
-                <span>{project.state}</span>
-              </div>
-              <p className="project-summary">{project.summary}</p>
-
-              <details className="project-notes">
-                <summary>open field notes</summary>
-                <div>
-                  <p>{project.note}</p>
-                  <p>
-                    <span>BUILD:</span> {project.build}
-                  </p>
-                </div>
-              </details>
-            </div>
-
-            <a className="project-source" href={project.href}>
-              SOURCE ↗
-            </a>
-          </article>
-        ))}
-      </section>
+      <ProjectCollection />
 
       <p className="project-footnote">
         Archive means exactly that: the code stays public, but active

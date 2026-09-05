@@ -13,7 +13,7 @@
     "test:navigation": "node --test scripts/static-navigation.test.mjs",
     "test:seo": "node --test scripts/seo.test.mjs",
     "test:cursors": "node --test scripts/pixel-cursors.test.mjs",
-    "test:details": "node --test scripts/local-time.test.mjs scripts/site-search.test.mjs scripts/pixel-pad.test.mjs",
+    "test:details": "node --test scripts/local-time.test.mjs scripts/site-search.test.mjs scripts/pixel-pad.test.mjs scripts/stamp-filter.test.mjs scripts/project-filter.test.mjs scripts/pixel-pad-storage.test.mjs",
     "format": "oxfmt"
   },
   "dependencies": {
