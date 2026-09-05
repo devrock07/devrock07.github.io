@@ -34,7 +34,7 @@ export const pageSeo = {
     path: '/stamps',
     title: 'Stamps — Dev Bhakat',
     description:
-      'Dev Bhakat’s little stamp collection: Discord, GitHub, coding tools, Minecraft, pixel art, and the apps and interests behind his projects.',
+      'Dev Bhakat’s stamp collection: anime and manga including Your Name, Suzume, and DAN DA DAN, alongside Discord, GitHub, coding tools, Minecraft, and pixel art.',
     image: {
       path: '/social/stamps-preview-v1.png',
       width: 1200,

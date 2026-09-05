@@ -14,14 +14,13 @@ export default function StampsPage() {
         <h1>Stamps & stuff.</h1>
         <div className="stamps-deck">
           <p>
-            Apps I’m around, tools I build with, and a few things that keep
-            finding their way into my projects. A little sticker sheet for this
-            corner of the web.
+            Apps I use, tools I build with, and anime and manga I’m into. A
+            little sticker sheet for this corner of the web.
           </p>
           <span className="stamp-postmark" aria-hidden="true">
             <span>DEVROCK07</span>
             <span>SMALL WEB</span>
-            <span>APPS + CODE</span>
+            <span>A BIT OF ME</span>
           </span>
         </div>
       </header>

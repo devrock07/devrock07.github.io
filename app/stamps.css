@@ -242,6 +242,69 @@
   --stamp-highlight: #a1d6c3;
 }
 
+.web-stamp[data-category='Anime & manga'] {
+  height: 78px;
+}
+
+.web-stamp[data-category='Anime & manga'] .stamp-lettering {
+  min-width: 0;
+}
+
+.web-stamp[data-category='Anime & manga'] .stamp-lettering strong {
+  font-size: 11px;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.stamp-level {
+  font-size: 15px;
+}
+
+.web-stamp[data-stamp='your-name'] {
+  --stamp-ground: #263968;
+  --stamp-highlight: #ecc7ee;
+}
+.web-stamp[data-stamp='weathering-with-you'] {
+  --stamp-ground: #284e64;
+  --stamp-highlight: #fee2a1;
+}
+.web-stamp[data-stamp='suzume'] {
+  --stamp-ground: #25524e;
+  --stamp-highlight: #ffc8a3;
+}
+.web-stamp[data-stamp='mushoku-tensei'] {
+  --stamp-ground: #52422a;
+  --stamp-highlight: #e9d9aa;
+}
+.web-stamp[data-stamp='kaiju-no-8'] {
+  --stamp-ground: #203d3d;
+  --stamp-highlight: #91e3c1;
+}
+.web-stamp[data-stamp='dandadan'] {
+  --stamp-ground: #621e30;
+  --stamp-highlight: #ffb199;
+}
+.web-stamp[data-stamp='noragami'] {
+  --stamp-ground: #2e3657;
+  --stamp-highlight: #c8e3f2;
+}
+.web-stamp[data-stamp='villager-level-999'] {
+  --stamp-ground: #3c4730;
+  --stamp-highlight: #e2d499;
+}
+.web-stamp[data-stamp='a-condition-called-love'] {
+  --stamp-ground: #663746;
+  --stamp-highlight: #ffd5da;
+}
+.web-stamp[data-stamp='trapped-in-a-dating-sim'] {
+  --stamp-ground: #42355d;
+  --stamp-highlight: #d8c4fa;
+}
+.web-stamp[data-stamp='daemons-of-the-shadow-realm'] {
+  --stamp-ground: #493329;
+  --stamp-highlight: #edc883;
+}
+
 .stamp-sheet-note {
   margin: 0;
   padding-top: 22px;
@@ -286,10 +349,13 @@
     padding: 0 21px 44px;
   }
   .stamp-toolbar {
-    align-items: flex-start;
-    gap: 8px;
+    position: relative;
+    display: block;
   }
   .stamp-filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
     gap: 3px;
   }
   .stamp-filters button {
@@ -298,7 +364,11 @@
     font-size: 0.63rem;
   }
   .stamp-count {
-    padding-top: 14px;
+    /* The five filters leave the last cell free for the result count. */
+    position: absolute;
+    right: 8px;
+    bottom: 30px;
+    padding-top: 0;
     font-size: 0.6rem;
   }
   .stamp-sheet {
@@ -327,6 +397,9 @@
   }
   .stamp-lettering > span {
     font-size: 6px;
+  }
+  .web-stamp[data-category='Anime & manga'] .stamp-lettering strong {
+    font-size: 10px;
   }
 }
 

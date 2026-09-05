@@ -1,5 +1,8 @@
+import { animeStamps } from '@/lib/anime-stamps';
+
 export const stampCategories = [
   'All stamps',
+  'Anime & manga',
   'Apps',
   'Toolkit',
   'Interests',
@@ -102,6 +105,7 @@ export const stamps = [
     note: 'The code stays out in the open.',
     href: 'https://github.com/devrock07',
   },
+  ...animeStamps,
 ] as const;
 
 export type Stamp = (typeof stamps)[number];

@@ -14,6 +14,7 @@ import {
 
 import { SiteLink } from '@/components/site-link';
 import { projects } from '@/lib/site-content';
+import { animeStamps } from '@/lib/anime-stamps';
 import { searchSite } from '@/lib/site-search.mjs';
 import '@/app/site-finder.css';
 
@@ -34,10 +35,10 @@ const entries = [
   },
   {
     title: 'Stamps',
-    description: 'A little collection of interests, apps, and web buttons.',
+    description: 'Anime, manga, apps, and little web buttons.',
     href: '/stamps',
     group: 'Pages',
-    keywords: 'interests apps software tools stamps buttons collection',
+    keywords: `interests apps software tools stamps buttons collection anime manga ${animeStamps.map((stamp) => `${stamp.name} ${stamp.note}`).join(' ')}`,
   },
   {
     title: 'Credits',

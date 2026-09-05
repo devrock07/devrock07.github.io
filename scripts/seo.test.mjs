@@ -424,7 +424,7 @@ test('stamps are rendered as accessible links and match their structured data', 
   );
   const entries = collection.mainEntity.itemListElement;
   assert.equal(collection.url, `${origin}/stamps`);
-  assert.equal(links.length, 12);
+  assert.equal(links.length, 23);
   assert.equal(collection.mainEntity.numberOfItems, links.length);
   assert.deepEqual(
     entries.map((entry) => entry.url),
@@ -438,11 +438,42 @@ test('stamps are rendered as accessible links and match their structured data', 
   const filters = tags(page.html, 'button').filter(
     (tag) => 'aria-pressed' in tag,
   );
-  assert.equal(filters.length, 4);
+  assert.equal(filters.length, 5);
   assert.equal(
     filters.filter((tag) => tag['aria-pressed'] === 'true').length,
     1,
   );
+});
+
+test('the anime collection includes exactly the eleven requested titles once', () => {
+  const page = pages.get('/stamps');
+  const animeLinks = tags(page.html, 'a').filter(
+    (tag) => tag['data-category'] === 'Anime & manga',
+  );
+  assert.deepEqual(
+    animeLinks.map((link) => link['data-stamp']),
+    [
+      'your-name',
+      'weathering-with-you',
+      'suzume',
+      'mushoku-tensei',
+      'kaiju-no-8',
+      'dandadan',
+      'noragami',
+      'villager-level-999',
+      'a-condition-called-love',
+      'trapped-in-a-dating-sim',
+      'daemons-of-the-shadow-realm',
+    ],
+  );
+  for (const link of animeLinks) assert.match(link.href, /^https:\/\//);
+  const collection = typedNode(page, 'CollectionPage');
+  assert.equal(
+    new Set(collection.mainEntity.itemListElement.map((entry) => entry.name))
+      .size,
+    23,
+  );
+  assert.match(visibleText(page.html), /Jobless Reincarnation/);
 });
 
 test('GitHub Pages directory copies retain the same complete HTML', async () => {

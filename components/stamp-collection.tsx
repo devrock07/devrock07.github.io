@@ -8,6 +8,15 @@ import { YoutubeSolid } from 'pixelarticons/react/YoutubeSolid';
 import { Code } from 'pixelarticons/react/Code';
 import { Gamepad } from 'pixelarticons/react/Gamepad';
 import { Pixelarticons } from 'pixelarticons/react/Pixelarticons';
+import { Star } from 'pixelarticons/react/Star';
+import { CloudSun } from 'pixelarticons/react/CloudSun';
+import { DoorClosed } from 'pixelarticons/react/DoorClosed';
+import { MagicEdit } from 'pixelarticons/react/MagicEdit';
+import { Shield } from 'pixelarticons/react/Shield';
+import { Sparkles } from 'pixelarticons/react/Sparkles';
+import { Coins } from 'pixelarticons/react/Coins';
+import { Heart } from 'pixelarticons/react/Heart';
+import { Moon } from 'pixelarticons/react/Moon';
 import { SiteLink } from '@/components/site-link';
 import { stampCategories, stamps, type Stamp } from '@/lib/site-stamps';
 
@@ -37,6 +46,28 @@ function StampMark({ id }: { id: Stamp['id'] }) {
       return <span>n.</span>;
     case 'svelte':
       return <span>S</span>;
+    case 'your-name':
+      return <Star />;
+    case 'weathering-with-you':
+      return <CloudSun />;
+    case 'suzume':
+      return <DoorClosed />;
+    case 'mushoku-tensei':
+      return <MagicEdit />;
+    case 'kaiju-no-8':
+      return <Shield />;
+    case 'dandadan':
+      return <Sparkles />;
+    case 'noragami':
+      return <Coins />;
+    case 'villager-level-999':
+      return <span className="stamp-level">999</span>;
+    case 'a-condition-called-love':
+      return <Heart />;
+    case 'trapped-in-a-dating-sim':
+      return <Gamepad />;
+    case 'daemons-of-the-shadow-realm':
+      return <Moon />;
   }
 }
 
@@ -80,6 +111,7 @@ export function StampCollection() {
               <StampLink
                 className="web-stamp"
                 data-stamp={stamp.id}
+                data-category={stamp.category}
                 href={stamp.href}
                 aria-describedby={`stamp-note-${stamp.id}`}
               >
@@ -97,7 +129,7 @@ export function StampCollection() {
         })}
       </ul>
       <p className="stamp-sheet-note">
-        Click a stamp to open its app, profile, or project.
+        Every stamp is a link. Anime and manga stamps open official title pages.
       </p>
     </section>
   );
