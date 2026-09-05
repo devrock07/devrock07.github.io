@@ -29,6 +29,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
 import { SiteLink as Link } from '@/components/site-link';
+import { createPixelCursors } from '@/lib/pixel-cursors.mjs';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
@@ -44,6 +45,14 @@ const pages = [
 
 function isCurrent(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
+}
+
+function syncPixelCursors(hue: number, paperMode: boolean) {
+  for (const [property, cursor] of Object.entries(
+    createPixelCursors(hue, paperMode),
+  )) {
+    document.documentElement.style.setProperty(property, cursor);
+  }
 }
 
 function PixelSocialIcon({ label }: { label: string }) {
@@ -256,6 +265,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       '--accent-hue',
       `${savedAccentHue}deg`,
     );
+    syncPixelCursors(savedAccentHue, savedPaperMode);
     setPaperModeState(savedPaperMode);
     setAccentHueState(savedAccentHue);
   }, []);
@@ -265,6 +275,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
     setPaperModeState(checked);
     document.documentElement.dataset.theme = theme;
+    syncPixelCursors(accentHue, checked);
 
     try {
       localStorage.setItem(THEME_STORAGE_KEY, theme);
@@ -279,6 +290,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
     setAccentHueState(nextHue);
     document.documentElement.style.setProperty('--accent-hue', `${nextHue}deg`);
+    syncPixelCursors(nextHue, paperMode);
 
     try {
       localStorage.setItem(ACCENT_STORAGE_KEY, String(nextHue));

@@ -1259,3 +1259,84 @@ a {
     animation: none !important;
   }
 }
+
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  html,
+  body {
+    cursor: var(--cursor-default, auto);
+  }
+
+  :where(
+    p,
+    h1,
+    h2,
+    h3,
+    li,
+    dt,
+    dd,
+    time,
+    blockquote,
+    pre,
+    code,
+    textarea,
+    input:not([type]),
+    input[type='text'],
+    input[type='email'],
+    input[type='url'],
+    input[type='search'],
+    input[type='password'],
+    input[type='tel'],
+    input[type='number'],
+    [contenteditable='true']
+  ) {
+    cursor: var(--cursor-text, text);
+  }
+
+  :is(
+    a[href],
+    button:not([data-slot='sidebar-rail']),
+    summary,
+    .project-notes summary,
+    .sidebar-close,
+    [role='button'],
+    [role='switch'],
+    [role='checkbox'],
+    [role='radio'],
+    [data-slot='slider'],
+    input[type='range'],
+    input[type='checkbox'],
+    input[type='radio'],
+    input[type='button'],
+    input[type='submit'],
+    input[type='reset'],
+    label[for],
+    select
+  ) {
+    cursor: var(--cursor-pointer, pointer);
+  }
+
+  :is(
+      a[href],
+      button,
+      summary,
+      [role='button'],
+      [role='switch'],
+      [data-slot='slider'],
+      label[for]
+    )
+    * {
+    cursor: inherit;
+  }
+
+  :is(
+    button:disabled,
+    input:disabled,
+    select:disabled,
+    textarea:disabled,
+    [aria-disabled='true'],
+    [data-disabled]
+  ),
+  :is(button:disabled, [aria-disabled='true'], [data-disabled]) * {
+    cursor: not-allowed;
+  }
+}

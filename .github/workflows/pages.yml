@@ -42,6 +42,9 @@ jobs:
       - name: Check search and sharing metadata
         run: npm run test:seo
 
+      - name: Check accent-synced cursors
+        run: npm run test:cursors
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

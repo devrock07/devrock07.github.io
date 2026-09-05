@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "npm run build && npm run test:navigation && npm run test:seo",
+  "buildCommand": "npm run build && npm run test:navigation && npm run test:seo && npm run test:cursors",
   "outputDirectory": "dist/client",
   "cleanUrls": true
 }
