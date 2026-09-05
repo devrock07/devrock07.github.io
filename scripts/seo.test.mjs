@@ -425,7 +425,7 @@ test('GitHub Pages directory copies retain the same complete HTML', async () => 
   }
 });
 
-test('every footer links to an honest AI-use disclosure on the credits page', () => {
+test('footers stay simple and credits retain the concise build note', () => {
   for (const page of pages.values()) {
     const footer = single(
       Array.from(
@@ -437,18 +437,28 @@ test('every footer links to an honest AI-use disclosure on the credits page', ()
       ),
       `${page.path} shared footer`,
     )[2];
-    const disclosureLink = single(
-      Array.from(
-        footer.matchAll(
-          /<a\b((?:[^"'<>]|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/a\s*>/gi,
-        ),
-      ).filter((match) => attributes(match[1]).href === '/credits#ai-use'),
-      `${page.path} AI disclosure link`,
+    assert.equal(
+      tags(footer, '[a-z][a-z0-9:-]*').some((tag) =>
+        tag.class?.split(/\s+/).includes('ai-disclosure-badge'),
+      ),
+      false,
+      `${page.path} footer still has the AI sticker`,
     );
-    const label = visibleText(disclosureLink[2]);
-    assert.match(label, /\bAI\s*-\s*ACCELERATED\b/);
-    assert.match(label, /\bHUMAN\s*-\s*DIRECTED\b/);
-    assert.doesNotMatch(label, /\b(certified|verified|approved|accredited)\b/i);
+    const links = tags(footer, 'a');
+    assert.equal(
+      links.some((tag) => tag.href === '/credits#ai-use'),
+      false,
+    );
+    single(
+      links.filter((tag) => tag.href === '#main-content'),
+      `${page.path} back-to-top link`,
+    );
+    const text = visibleText(footer);
+    assert.match(text, /\bDEV\s+BHAKAT\b/i);
+    assert.doesNotMatch(
+      text,
+      /\b(?:AI\s*-\s*ACCELERATED|HUMAN\s*-\s*DIRECTED)\b/i,
+    );
   }
   const disclosure = single(
     Array.from(
@@ -459,10 +469,25 @@ test('every footer links to an honest AI-use disclosure on the credits page', ()
     'credits AI-use section',
   );
   const text = visibleText(disclosure[2]);
-  assert.match(text, /\bI set the direction and make the design calls\b/i);
-  assert.match(
-    text,
-    /\bAI tools were used for coding, debugging, and the link-preview artwork\b/i,
+  const heading = single(
+    Array.from(disclosure[2].matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2\s*>/gi)),
+    'credits build-note heading',
   );
-  assert.match(text, /\bmy own disclosure, not a third-party certification\b/i);
+  assert.equal(visibleText(heading[1]), 'Behind the build');
+  const description =
+    'Built and configured by me, with AI assistance for coding, refinements, bug fixes, and the sharing images.';
+  single(
+    Array.from(disclosure[2].matchAll(/<p\b[^>]*>([\s\S]*?)<\/p\s*>/gi)).filter(
+      (match) => visibleText(match[1]) === description,
+    ),
+    'credits build-note description',
+  );
+  assert.doesNotMatch(text, /\b(?:sticker|third-party|certification)\b/i);
+  assert.equal(
+    tags(pages.get('/credits').html, 'a').some((tag) =>
+      /^https?:\/\/(?:www\.)?aihonestybadge\.com(?:\/|$)/i.test(tag.href ?? ''),
+    ),
+    false,
+    'Credits must not link to AI Honesty Badge',
+  );
 });

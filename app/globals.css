@@ -964,8 +964,8 @@ a {
 
 .site-footer {
   display: grid;
-  min-height: 112px;
-  grid-template-columns: 1fr auto 1fr;
+  min-height: 88px;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 20px;
   padding: 25px var(--content-x);
@@ -978,46 +978,6 @@ a {
 
 .site-footer p {
   margin: 0;
-}
-
-.ai-disclosure-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-self: center;
-  gap: 11px;
-  padding: 9px 13px 9px 10px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 3px;
-  box-shadow: 3px 3px 0 var(--rule);
-  color: var(--paper);
-  text-decoration: none;
-  letter-spacing: 0.025em;
-}
-
-.ai-badge-mark {
-  display: grid;
-  width: 31px;
-  height: 31px;
-  place-items: center;
-  border: 1px solid currentColor;
-  color: var(--clay);
-  font-size: 0.8rem;
-}
-
-.ai-badge-copy {
-  display: grid;
-  gap: 5px;
-  white-space: nowrap;
-}
-
-.ai-badge-copy > span {
-  color: var(--muted);
-  font-size: 0.55rem;
-}
-
-.ai-badge-copy > strong {
-  font-size: 0.66rem;
-  font-weight: 400;
 }
 
 .site-footer > .back-to-top {
@@ -1282,15 +1242,7 @@ a {
   }
 
   .site-footer {
-    min-height: 145px;
-    grid-template-columns: 1fr auto;
     padding: 24px 21px;
-  }
-
-  .site-footer .ai-disclosure-badge {
-    grid-row: 2;
-    grid-column: 1 / -1;
-    justify-self: start;
   }
 }
 

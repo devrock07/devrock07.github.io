@@ -29,7 +29,6 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { socials } from '@/lib/site-content';
 import { SiteLink as Link } from '@/components/site-link';
-import { AiDisclosureBadge } from '@/components/ai-disclosure-badge';
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT_HUE,
@@ -225,7 +224,6 @@ function ShellContent({
           {children}
           <footer className="site-footer">
             <p>DEV BHAKAT · 2026</p>
-            <AiDisclosureBadge />
             <a className="back-to-top" href="#main-content">
               BACK TO TOP ↑
             </a>

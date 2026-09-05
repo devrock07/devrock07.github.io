@@ -53,12 +53,10 @@ const credits = [
   {
     index: '05',
     kind: 'HOW IT’S MADE',
-    name: 'Human-directed. AI-accelerated.',
+    name: 'Behind the build',
     description:
-      'I set the direction and make the design calls. AI tools were used for coding, debugging, and the link-preview artwork. The sticker is my own disclosure, not a third-party certification.',
-    links: [
-      { label: 'AI HONESTY BADGE ↗', href: 'https://www.aihonestybadge.com/' },
-    ],
+      'Built and configured by me, with AI assistance for coding, refinements, bug fixes, and the sharing images.',
+    links: [],
   },
 ] as const;
 
@@ -97,9 +95,9 @@ export default function CreditsPage() {
                   </a>
                 ))}
               </div>
-            ) : (
+            ) : credit.kind === 'ARTWORK' ? (
               <span className="credit-owned">PERSONAL ASSET</span>
-            )}
+            ) : null}
           </article>
         ))}
       </section>
