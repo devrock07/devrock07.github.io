@@ -72,6 +72,45 @@ test('invalid hue values cannot leak into SVG paint or markup', () => {
   assert.deepEqual(createPixelCursors(123.6), createPixelCursors(124));
 });
 
+test('accent-filled surfaces use contrasting cursor outlines at every hue', () => {
+  for (let hue = 0; hue < 360; hue += 1) {
+    for (const paper of [false, true]) {
+      const standard = createPixelCursors(hue, paper);
+      const onAccent = createPixelCursors(hue, paper, true);
+      assert.equal(Object.keys(onAccent).length, 3);
+      for (const kind of ['default', 'pointer', 'text']) {
+        const normal = decodeCursor(standard[`--cursor-${kind}`]);
+        const contrast = decodeCursor(onAccent[`--cursor-${kind}-on-accent`]);
+        assert.deepEqual([contrast.x, contrast.y], [normal.x, normal.y]);
+        assert.equal(
+          contrast.svg,
+          normal.svg.replace(
+            paper ? '#1c211f' : '#eee7d8',
+            paper ? '#eee7d8' : '#121514',
+          ),
+          'Only the outline changes; keep the compact shape and synced hue',
+        );
+      }
+    }
+  }
+});
+
+test('contact text selection reverses the surface colors, including link text', async () => {
+  const css = await readFile(
+    new URL('../app/globals.css', import.meta.url),
+    'utf8',
+  );
+  assert.match(
+    css,
+    /\.contact::selection,\s*\.contact \*::selection\s*\{\s*background: var\(--on-clay\);\s*color: var\(--clay\);\s*\}/,
+  );
+  for (const kind of ['default', 'pointer', 'text']) {
+    assert.ok(
+      css.includes(`--cursor-${kind}: var(--cursor-${kind}-on-accent,`),
+    );
+  }
+});
+
 test('custom cursors are limited to fine pointers with native accessibility fallbacks', async () => {
   const css = await readFile(
     new URL('../app/globals.css', import.meta.url),

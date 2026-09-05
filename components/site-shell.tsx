@@ -48,9 +48,10 @@ function isCurrent(pathname: string, href: string) {
 }
 
 function syncPixelCursors(hue: number, paperMode: boolean) {
-  for (const [property, cursor] of Object.entries(
-    createPixelCursors(hue, paperMode),
-  )) {
+  for (const [property, cursor] of Object.entries({
+    ...createPixelCursors(hue, paperMode),
+    ...createPixelCursors(hue, paperMode, true),
+  })) {
     document.documentElement.style.setProperty(property, cursor);
   }
 }
